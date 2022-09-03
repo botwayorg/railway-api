@@ -7,8 +7,8 @@ import (
 	"os/exec"
 	"runtime"
 
-	"github.com/railwayapp/cli/entity"
-	"github.com/railwayapp/cli/ui"
+	"github.com/botwayorg/railway-api/entity"
+	"github.com/botwayorg/railway-api/ui"
 )
 
 func (h *Handler) Shell(ctx context.Context, req *entity.CommandRequest) error {

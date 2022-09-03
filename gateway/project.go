@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 
+	configs "github.com/botwayorg/railway-api/configs"
+	"github.com/botwayorg/railway-api/entity"
+	"github.com/botwayorg/railway-api/errors"
 	"github.com/pkg/browser"
-	configs "github.com/railwayapp/cli/configs"
-	"github.com/railwayapp/cli/entity"
-	"github.com/railwayapp/cli/errors"
 )
 
 // GetProjectToken looks up a project and environment by the RAILWAY_TOKEN

@@ -11,11 +11,11 @@ import (
 	"sync"
 	"time"
 
+	configs "github.com/botwayorg/railway-api/configs"
+	"github.com/botwayorg/railway-api/entity"
+	"github.com/botwayorg/railway-api/errors"
+	"github.com/botwayorg/railway-api/ui"
 	"github.com/pkg/browser"
-	configs "github.com/railwayapp/cli/configs"
-	"github.com/railwayapp/cli/entity"
-	"github.com/railwayapp/cli/errors"
-	"github.com/railwayapp/cli/ui"
 )
 
 const (

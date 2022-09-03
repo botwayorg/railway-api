@@ -3,7 +3,7 @@ package gateway
 import (
 	"context"
 
-	"github.com/railwayapp/cli/errors"
+	"github.com/botwayorg/railway-api/errors"
 )
 
 // GetWritableGithubScopes returns scopes associated with Railway user

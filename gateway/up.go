@@ -8,7 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/railwayapp/cli/entity"
+	"github.com/botwayorg/railway-api/entity"
 )
 
 func constructReq(ctx context.Context, req *entity.UpRequest) (*http.Request, error) {

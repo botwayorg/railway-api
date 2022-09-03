@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 
-	"github.com/railwayapp/cli/entity"
+	"github.com/botwayorg/railway-api/entity"
 )
 
 func (c *Configs) GetRootConfigs() (*entity.RootConfig, error) {

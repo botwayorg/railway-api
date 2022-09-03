@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/railwayapp/cli/ui"
+	"github.com/botwayorg/railway-api/ui"
 
-	"github.com/railwayapp/cli/entity"
+	"github.com/botwayorg/railway-api/entity"
 )
 
 func (h *Handler) Variables(ctx context.Context, req *entity.CommandRequest) error {

@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/railwayapp/cli/entity"
+	"github.com/botwayorg/railway-api/entity"
 )
 
 func (h *Handler) Build(ctx context.Context, req *entity.CommandRequest) error {

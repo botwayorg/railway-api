@@ -3,8 +3,8 @@ package gateway
 import (
 	"context"
 
-	"github.com/railwayapp/cli/entity"
-	"github.com/railwayapp/cli/errors"
+	"github.com/botwayorg/railway-api/entity"
+	"github.com/botwayorg/railway-api/errors"
 )
 
 func (g *Gateway) SendPanic(ctx context.Context, req *entity.PanicRequest) (bool, error) {

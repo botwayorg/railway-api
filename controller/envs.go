@@ -7,10 +7,10 @@ import (
 	"io/ioutil"
 	"os"
 
+	"github.com/botwayorg/railway-api/entity"
+	CLIErrors "github.com/botwayorg/railway-api/errors"
+	"github.com/botwayorg/railway-api/ui"
 	"github.com/joho/godotenv"
-	"github.com/railwayapp/cli/entity"
-	CLIErrors "github.com/railwayapp/cli/errors"
-	"github.com/railwayapp/cli/ui"
 )
 
 func (c *Controller) GetEnvsForCurrentEnvironment(ctx context.Context, serviceName *string) (*entity.Envs, error) {

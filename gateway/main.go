@@ -12,8 +12,8 @@ import (
 
 	"github.com/pkg/errors"
 
-	configs "github.com/railwayapp/cli/configs"
-	"github.com/railwayapp/cli/constants"
+	configs "github.com/botwayorg/railway-api/configs"
+	"github.com/botwayorg/railway-api/constants"
 )
 
 const (

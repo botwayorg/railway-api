@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/railwayapp/cli/entity"
-	"github.com/railwayapp/cli/ui"
-	"github.com/railwayapp/cli/uuid"
+	"github.com/botwayorg/railway-api/entity"
+	"github.com/botwayorg/railway-api/ui"
+	"github.com/botwayorg/railway-api/uuid"
 )
 
 func (h *Handler) Delete(ctx context.Context, req *entity.CommandRequest) error {

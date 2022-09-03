@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/railwayapp/cli/entity"
-	"github.com/railwayapp/cli/errors"
-	gqlgen "github.com/railwayapp/cli/lib/gql"
+	"github.com/botwayorg/railway-api/entity"
+	"github.com/botwayorg/railway-api/errors"
+	gqlgen "github.com/botwayorg/railway-api/lib/gql"
 )
 
 func (g *Gateway) GetDeploymentsForEnvironment(ctx context.Context, projectId, environmentId string) ([]*entity.Deployment, error) {

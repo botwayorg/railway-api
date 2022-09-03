@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/railwayapp/cli/constants"
-	"github.com/railwayapp/cli/entity"
-	"github.com/railwayapp/cli/ui"
+	"github.com/botwayorg/railway-api/constants"
+	"github.com/botwayorg/railway-api/entity"
+	"github.com/botwayorg/railway-api/ui"
 )
 
 func (c *Controller) SendPanic(ctx context.Context, panicErr string, stacktrace string, command string) (bool, error) {

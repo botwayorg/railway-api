@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/botwayorg/railway-api/entity"
+	"github.com/botwayorg/railway-api/ui"
 	"github.com/manifoldco/promptui"
-	"github.com/railwayapp/cli/entity"
-	"github.com/railwayapp/cli/ui"
 )
 
 func (h *Handler) Environment(ctx context.Context, req *entity.CommandRequest) error {
@@ -31,7 +31,7 @@ func (h *Handler) Environment(ctx context.Context, req *entity.CommandRequest) e
 			}
 		}
 
-		if (environment != nil) {
+		if environment != nil {
 			fmt.Printf("%s Environment: %s\n", promptui.IconGood, ui.BlueText(environment.Name))
 		} else {
 			// Create new environment

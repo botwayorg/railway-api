@@ -3,7 +3,7 @@ package controller
 import (
 	"context"
 
-	"github.com/railwayapp/cli/entity"
+	"github.com/botwayorg/railway-api/entity"
 )
 
 func (c *Controller) GetDeployments(ctx context.Context) ([]*entity.Deployment, error) {

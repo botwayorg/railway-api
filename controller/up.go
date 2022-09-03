@@ -12,8 +12,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/railwayapp/cli/entity"
-	gitignore "github.com/railwayapp/cli/gateway"
+	"github.com/botwayorg/railway-api/entity"
+	gitignore "github.com/botwayorg/railway-api/gateway"
 )
 
 var validIgnoreFile = map[string]bool{

@@ -13,9 +13,9 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/railwayapp/cli/entity"
-	"github.com/railwayapp/cli/errors"
-	"github.com/railwayapp/cli/ui"
+	"github.com/botwayorg/railway-api/entity"
+	"github.com/botwayorg/railway-api/errors"
+	"github.com/botwayorg/railway-api/ui"
 )
 
 var RAIL_PORT = 4411

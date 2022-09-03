@@ -3,8 +3,8 @@ package controller
 import (
 	"context"
 
-	"github.com/railwayapp/cli/entity"
-	CLIErrors "github.com/railwayapp/cli/errors"
+	"github.com/botwayorg/railway-api/entity"
+	CLIErrors "github.com/botwayorg/railway-api/errors"
 )
 
 // GetCurrentEnvironment returns the currently active environment for the Railway project

@@ -1,8 +1,8 @@
 package configs
 
 import (
-	"github.com/railwayapp/cli/entity"
-	"github.com/railwayapp/cli/errors"
+	"github.com/botwayorg/railway-api/entity"
+	"github.com/botwayorg/railway-api/errors"
 )
 
 func (c *Configs) GetUserConfigs() (*entity.UserConfig, error) {

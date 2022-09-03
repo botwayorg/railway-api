@@ -1,10 +1,10 @@
 package controller
 
 import (
+	"github.com/botwayorg/railway-api/configs"
+	"github.com/botwayorg/railway-api/gateway"
+	"github.com/botwayorg/railway-api/random"
 	"github.com/google/go-github/github"
-	"github.com/railwayapp/cli/configs"
-	"github.com/railwayapp/cli/gateway"
-	"github.com/railwayapp/cli/random"
 )
 
 type Controller struct {

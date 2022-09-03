@@ -2,7 +2,7 @@ package controller
 
 import (
 	"context"
-	"github.com/railwayapp/cli/entity"
+	"github.com/botwayorg/railway-api/entity"
 )
 
 // GetWorkflowStatus fetches the status of a workflow based on request, error otherwise

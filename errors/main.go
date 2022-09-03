@@ -3,7 +3,7 @@ package errors
 import (
 	"fmt"
 
-	"github.com/railwayapp/cli/ui"
+	"github.com/botwayorg/railway-api/ui"
 )
 
 type RailwayError error

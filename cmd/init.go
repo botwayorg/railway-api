@@ -8,9 +8,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/railwayapp/cli/entity"
-	CLIErrors "github.com/railwayapp/cli/errors"
-	"github.com/railwayapp/cli/ui"
+	"github.com/botwayorg/railway-api/entity"
+	CLIErrors "github.com/botwayorg/railway-api/errors"
+	"github.com/botwayorg/railway-api/ui"
 )
 
 func (h *Handler) initNew(ctx context.Context, req *entity.CommandRequest) error {

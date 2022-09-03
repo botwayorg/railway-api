@@ -1,10 +1,11 @@
 package ui_test
 
 import (
-	"github.com/railwayapp/cli/ui"
-	"github.com/stretchr/testify/require"
 	"strings"
 	"testing"
+
+	"github.com/botwayorg/railway-api/ui"
+	"github.com/stretchr/testify/require"
 )
 
 var keyValuesTest = []struct {

@@ -8,10 +8,10 @@ import (
 	"runtime/debug"
 	"strings"
 
-	"github.com/railwayapp/cli/cmd"
-	"github.com/railwayapp/cli/constants"
-	"github.com/railwayapp/cli/entity"
-	"github.com/railwayapp/cli/ui"
+	"github.com/botwayorg/railway-api/cmd"
+	"github.com/botwayorg/railway-api/constants"
+	"github.com/botwayorg/railway-api/entity"
+	"github.com/botwayorg/railway-api/ui"
 	"github.com/spf13/cobra"
 )
 

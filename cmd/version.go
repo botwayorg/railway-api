@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/railwayapp/cli/constants"
-	"github.com/railwayapp/cli/entity"
-	"github.com/railwayapp/cli/ui"
+	"github.com/botwayorg/railway-api/constants"
+	"github.com/botwayorg/railway-api/entity"
+	"github.com/botwayorg/railway-api/ui"
 )
 
 func (h *Handler) Version(ctx context.Context, req *entity.CommandRequest) error {

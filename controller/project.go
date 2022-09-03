@@ -2,10 +2,10 @@ package controller
 
 import (
 	"context"
-	CLIErrors "github.com/railwayapp/cli/errors"
-	"github.com/railwayapp/cli/ui"
+	CLIErrors "github.com/botwayorg/railway-api/errors"
+	"github.com/botwayorg/railway-api/ui"
 
-	"github.com/railwayapp/cli/entity"
+	"github.com/botwayorg/railway-api/entity"
 )
 
 // GetCurrentProject returns the currently active project

@@ -3,7 +3,7 @@ package gateway
 import (
 	"context"
 
-	"github.com/railwayapp/cli/entity"
+	"github.com/botwayorg/railway-api/entity"
 )
 
 func (g *Gateway) GetUser(ctx context.Context) (*entity.User, error) {

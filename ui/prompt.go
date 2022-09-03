@@ -7,8 +7,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/botwayorg/railway-api/entity"
 	"github.com/manifoldco/promptui"
-	"github.com/railwayapp/cli/entity"
 )
 
 type Prompt string

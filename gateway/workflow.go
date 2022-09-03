@@ -3,8 +3,8 @@ package gateway
 import (
 	context "context"
 
-	"github.com/railwayapp/cli/entity"
-	"github.com/railwayapp/cli/errors"
+	"github.com/botwayorg/railway-api/entity"
+	"github.com/botwayorg/railway-api/errors"
 )
 
 func (g *Gateway) GetWorkflowStatus(ctx context.Context, workflowID string) (entity.WorkflowStatus, error) {

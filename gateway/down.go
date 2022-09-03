@@ -3,7 +3,7 @@ package gateway
 import (
 	"context"
 
-	"github.com/railwayapp/cli/entity"
+	"github.com/botwayorg/railway-api/entity"
 )
 
 func (g *Gateway) Down(ctx context.Context, req *entity.DownRequest) error {
