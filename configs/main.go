@@ -73,16 +73,16 @@ func (c *Configs) marshalConfig(config *Config, cfg interface{}) error {
 }
 
 func New() *Configs {
-	// Configs stored in root (~/.railway)
+	// Configs stored in root (~/.botway)
 	// Includes token, etc
 	rootViper := viper.New()
-	rootConfigPartialPath := ".railway/config.json"
+	rootConfigPartialPath := ".botway/railway-config.json"
 	if IsDevMode() {
-		rootConfigPartialPath = ".railway/dev-config.json"
+		rootConfigPartialPath = ".botway/railway-dev-config.json"
 	}
 
 	if IsStagingMode() {
-		rootConfigPartialPath = ".railway/staging-config.json"
+		rootConfigPartialPath = ".botway/railway-staging-config.json"
 	}
 
 	homeDir, err := os.UserHomeDir()
@@ -107,7 +107,7 @@ func New() *Configs {
 
 	// Configs stored in projects (<project>/.railway)
 	// Includes projectId, environmentId, etc
-	projectDir, err := filepath.Abs("./.railway")
+	projectDir, err := filepath.Abs("./.botway")
 	if err != nil {
 		panic(err)
 	}
