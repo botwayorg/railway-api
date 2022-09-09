@@ -16,6 +16,7 @@ func (g *Gateway) CreateEnvironment(ctx context.Context, req *entity.CreateEnvir
 			}
 		}
 	`)
+
 	if err != nil {
 		return nil, err
 	}
@@ -26,9 +27,11 @@ func (g *Gateway) CreateEnvironment(ctx context.Context, req *entity.CreateEnvir
 	var resp struct {
 		Environment *entity.Environment `json:"createEnvironment,omitempty"`
 	}
+
 	if err := gqlReq.Run(ctx, &resp); err != nil {
 		return nil, errors.CreateEnvironmentFailed
 	}
+
 	return resp.Environment, nil
 }
 
@@ -41,6 +44,7 @@ func (g *Gateway) CreateEphemeralEnvironment(ctx context.Context, req *entity.Cr
 			}
 		}
 	`)
+
 	if err != nil {
 		return nil, err
 	}
@@ -52,9 +56,11 @@ func (g *Gateway) CreateEphemeralEnvironment(ctx context.Context, req *entity.Cr
 	var resp struct {
 		Environment *entity.Environment `json:"createEphemeralEnvironment,omitempty"`
 	}
+
 	if err := gqlReq.Run(ctx, &resp); err != nil {
 		return nil, errors.CreateEnvironmentFailed
 	}
+
 	return resp.Environment, nil
 }
 
@@ -64,6 +70,7 @@ func (g *Gateway) DeleteEnvironment(ctx context.Context, req *entity.DeleteEnvir
 			deleteEnvironment(environmentId: $environmentId, projectId: $projectId)
 		}
 	`)
+
 	if err != nil {
 		return err
 	}
@@ -74,8 +81,10 @@ func (g *Gateway) DeleteEnvironment(ctx context.Context, req *entity.DeleteEnvir
 	var resp struct {
 		Created bool `json:"createEnvironment,omitempty"`
 	}
+
 	if err := gqlReq.Run(ctx, &resp); err != nil {
 		return errors.CreateEnvironmentFailed
 	}
+
 	return nil
 }

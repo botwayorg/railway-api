@@ -51,6 +51,7 @@ func (c *Controller) GetServiceIdByName(ctx context.Context, serviceName *string
 
 	// Get service id from name
 	serviceID := ""
+
 	if serviceName != nil && *serviceName != "" {
 		for _, service := range project.Services {
 			if service.Name == *serviceName {
@@ -65,9 +66,11 @@ func (c *Controller) GetServiceIdByName(ctx context.Context, serviceName *string
 
 	if serviceID == "" {
 		service, err := ui.PromptServices(project.Services)
+
 		if err != nil {
 			return nil, err
 		}
+
 		if service != nil {
 			serviceID = service.ID
 		}

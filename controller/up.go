@@ -51,6 +51,7 @@ func scanIgnoreFiles(src string) ([]ignoreFile, error) {
 		}
 
 		fname := filepath.Base(path)
+
 		if validIgnoreFile[fname] {
 			igf, err := gitignore.CompileIgnoreFile(path)
 			if err != nil {
@@ -90,6 +91,7 @@ func compress(src string, buf io.Writer) error {
 	// walk through every file in the folder
 	err = filepath.WalkDir(src, func(absoluteFile string, de os.DirEntry, passedErr error) error {
 		relativeFile, err := filepath.Rel(src, absoluteFile)
+
 		if err != nil {
 			return err
 		}
@@ -97,6 +99,7 @@ func compress(src string, buf io.Writer) error {
 		if passedErr != nil {
 			return err
 		}
+
 		if de.IsDir() {
 			// skip directories if we can (for perf)
 			// e.g., want to avoid walking node_modules dir
@@ -112,6 +115,7 @@ func compress(src string, buf io.Writer) error {
 		for _, igf := range ignoreFiles {
 			if strings.HasPrefix(absoluteFile, igf.prefix) { // if ignore file applicable
 				trimmed := strings.TrimPrefix(absoluteFile, igf.prefix)
+
 				if igf.ignore.MatchesPath(trimmed) {
 					return nil
 				}
@@ -120,6 +124,7 @@ func compress(src string, buf io.Writer) error {
 
 		// follow symlinks by default
 		ln, err := filepath.EvalSymlinks(absoluteFile)
+
 		if err != nil {
 			return err
 		}
@@ -132,10 +137,13 @@ func compress(src string, buf io.Writer) error {
 		// read file into a buffer to prevent tar overwrites
 		data := bytes.NewBuffer(nil)
 		f, err := os.Open(ln)
+
 		if err != nil {
 			return err
 		}
+
 		_, err = io.Copy(data, f)
+
 		if err != nil {
 			return err
 		}
@@ -161,10 +169,12 @@ func compress(src string, buf io.Writer) error {
 		if err := tw.WriteHeader(header); err != nil {
 			return err
 		}
+
 		// not a dir, write file content
 		if _, err := io.Copy(tw, data); err != nil {
 			return err
 		}
+
 		return err
 	})
 
@@ -176,10 +186,12 @@ func compress(src string, buf io.Writer) error {
 	if err := tw.Close(); err != nil {
 		return err
 	}
+
 	// produce gzip
 	if err := zr.Close(); err != nil {
 		return err
 	}
+
 	return nil
 }
 

@@ -9,11 +9,15 @@ import (
 
 func (c *Configs) GetRootConfigs() (*entity.RootConfig, error) {
 	var cfg entity.RootConfig
+
 	b, err := ioutil.ReadFile(c.rootConfigs.configPath)
+
 	if err != nil {
 		return nil, err
 	}
+
 	err = json.Unmarshal(b, &cfg)
+
 	return &cfg, err
 }
 

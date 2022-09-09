@@ -11,16 +11,19 @@ import (
 
 func (h *Handler) Environment(ctx context.Context, req *entity.CommandRequest) error {
 	projectID, err := h.cfg.GetProject()
+
 	if err != nil {
 		return err
 	}
 
 	project, err := h.ctrl.GetProject(ctx, projectID)
+
 	if err != nil {
 		return err
 	}
 
 	var environment *entity.Environment
+
 	if len(req.Args) > 0 {
 		var name = req.Args[0]
 
@@ -39,24 +42,29 @@ func (h *Handler) Environment(ctx context.Context, req *entity.CommandRequest) e
 				Name:      name,
 				ProjectID: project.Id,
 			})
+
 			if err != nil {
 				return err
 			}
+
 			fmt.Printf("Created Environment %s\nEnvironment: %s\n", promptui.IconGood, ui.BlueText(ui.Bold(name).String()))
 		}
 	} else {
 		// Existing environment selector
 		environment, err = ui.PromptEnvironments(project.Environments)
+
 		if err != nil {
 			return err
 		}
 	}
 
 	err = h.cfg.SetEnvironment(environment.Id)
+
 	if err != nil {
 		return err
 	}
 
 	fmt.Printf("%s ProTip: You can view the active environment by running %s\n", promptui.IconInitial, ui.BlueText("railway status"))
+
 	return err
 }

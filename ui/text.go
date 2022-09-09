@@ -76,6 +76,7 @@ func VerboseInfo(isVerbose bool, text string) string {
 func Truncate(text string, maxLength int) string {
 	ellipsis := "..."
 	overflow := len(text) + len(ellipsis) - maxLength
+
 	if overflow < 0 {
 		return text
 	}
@@ -101,18 +102,22 @@ func ObscureText(text string) string {
 
 func UnorderedList(items []string) string {
 	text := ""
+
 	for _, item := range items {
 		text += fmt.Sprintf("%s %s\n", Bold(LightGrayText("-").String()), item)
 	}
+
 	return text
 }
 
 func OrderedList(items []string) string {
 	text := ""
+
 	for i, item := range items {
 		index := Bold(LightGrayText(fmt.Sprintf("%d)", i+1)).String())
 		text += fmt.Sprintf("%s %s\n", index, item)
 	}
+
 	return text
 }
 
@@ -127,6 +132,7 @@ func Paragraph(text string) string {
 
 	lines := make([]string, 0)
 	currentLine := ""
+
 	for _, word := range strings.Split(text, " ") {
 		currentLineWithNextWord := currentLine
 		if currentLineWithNextWord == "" {
@@ -154,15 +160,18 @@ func Paragraph(text string) string {
 // BlockQuote adds two space characters to the start of every line in the text
 func BlockQuote(text string) string {
 	wrapped := strings.TrimSpace(Paragraph(text))
+
 	return PrefixLines(wrapped, GrayText("> ").String())
 }
 
 // PrefixLines adds a string to the start of every line in the text
 func PrefixLines(text, prefix string) string {
 	newText := ""
+
 	for _, line := range strings.Split(text, "\n") {
 		newText += fmt.Sprintf("%s%s\n", prefix, line)
 	}
+
 	return newText
 }
 
@@ -181,6 +190,7 @@ func KeyValues(items map[string]string) string {
 	// Add pairs to slice and find longest key
 	for k, v := range items {
 		pairs = append(pairs, pair{Key: k, Value: v})
+
 		if len(k) > longestKey {
 			longestKey = len(k)
 		}
@@ -194,9 +204,11 @@ func KeyValues(items map[string]string) string {
 	})
 
 	nameLength := min(longestKey, maxKeyLengthWithPadding)
+
 	for _, pair := range pairs {
 		prettyKey := fmt.Sprintf("%s:", GreenText(pair.Key))
 		padding := strings.Repeat(" ", max(0, nameLength-len(pair.Key)))
+
 		text += fmt.Sprintf("%s%s %s\n", prettyKey, padding, pair.Value)
 	}
 
@@ -207,6 +219,7 @@ func max(x, y int) int {
 	if x > y {
 		return x
 	}
+
 	return y
 }
 
@@ -214,5 +227,6 @@ func min(x, y int) int {
 	if x < y {
 		return x
 	}
+
 	return y
 }

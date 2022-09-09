@@ -17,6 +17,7 @@ func (g *Gateway) GetUser(ctx context.Context) (*entity.User, error) {
 			}
 		}
 	`)
+
 	if err != nil {
 		return nil, err
 	}
@@ -24,9 +25,11 @@ func (g *Gateway) GetUser(ctx context.Context) (*entity.User, error) {
 	var resp struct {
 		User *entity.User `json:"me"`
 	}
+
 	if err := gqlReq.Run(ctx, &resp); err != nil {
 		return nil, err
 	}
+
 	return resp.User, nil
 }
 
@@ -50,6 +53,7 @@ func (g *Gateway) ConsumeLoginSession(ctx context.Context, code string) (string,
 			consumeLoginSession(code: $code) 
 		}
 	`)
+
 	gqlReq.Var("code", code)
 
 	var resp struct {
@@ -65,6 +69,7 @@ func (g *Gateway) ConsumeLoginSession(ctx context.Context, code string) (string,
 
 func (g *Gateway) Logout(ctx context.Context) error {
 	gqlReq, err := g.NewRequestWithAuth(`mutation { logout }`)
+
 	if err != nil {
 		return err
 	}

@@ -10,11 +10,13 @@ import (
 // GetCurrentEnvironment returns the currently active environment for the Railway project
 func (c *Controller) GetCurrentEnvironment(ctx context.Context) (*entity.Environment, error) {
 	projectCfg, err := c.GetProjectConfigs(ctx)
+
 	if err != nil {
 		return nil, err
 	}
 
 	project, err := c.GetProject(ctx, projectCfg.Project)
+
 	if err != nil {
 		return nil, err
 	}
@@ -24,11 +26,13 @@ func (c *Controller) GetCurrentEnvironment(ctx context.Context) (*entity.Environ
 			return environment, nil
 		}
 	}
+
 	return nil, CLIErrors.EnvironmentNotSet
 }
 
 func (c *Controller) GetEnvironmentByName(ctx context.Context, environmentName string) (*entity.Environment, error) {
 	projectCfg, err := c.GetProjectConfigs(ctx)
+
 	if err != nil {
 		return nil, err
 	}
@@ -43,6 +47,7 @@ func (c *Controller) GetEnvironmentByName(ctx context.Context, environmentName s
 			return environment, nil
 		}
 	}
+
 	return nil, CLIErrors.EnvironmentNotFound
 }
 

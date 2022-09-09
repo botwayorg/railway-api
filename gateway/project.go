@@ -24,6 +24,7 @@ func (g *Gateway) GetProjectToken(ctx context.Context) (*entity.ProjectToken, er
 			}
 		}
 	`)
+
 	if err != nil {
 		return nil, err
 	}
@@ -31,9 +32,11 @@ func (g *Gateway) GetProjectToken(ctx context.Context) (*entity.ProjectToken, er
 	var resp struct {
 		ProjectToken *entity.ProjectToken `json:"projectToken"`
 	}
+
 	if err := gqlReq.Run(ctx, &resp); err != nil {
 		return nil, errors.ProjectTokenNotFound
 	}
+
 	return resp.ProjectToken, nil
 }
 
@@ -60,6 +63,7 @@ func (g *Gateway) GetProject(ctx context.Context, projectId string) (*entity.Pro
 			}
 		}
 	`)
+
 	if err != nil {
 		return nil, err
 	}
@@ -69,9 +73,11 @@ func (g *Gateway) GetProject(ctx context.Context, projectId string) (*entity.Pro
 	var resp struct {
 		Project *entity.Project `json:"projectById"`
 	}
+
 	if err := gqlReq.Run(ctx, &resp); err != nil {
 		return nil, errors.ProjectConfigNotFound
 	}
+
 	return resp.Project, nil
 }
 
@@ -94,6 +100,7 @@ func (g *Gateway) GetProjectByName(ctx context.Context, projectName string) (*en
 			}
 		}
 	`)
+
 	if err != nil {
 		return nil, err
 	}
@@ -111,6 +118,7 @@ func (g *Gateway) GetProjectByName(ctx context.Context, projectName string) (*en
 	}
 
 	projects := resp.Me.Projects
+
 	if len(projects) == 0 {
 		return nil, errors.ProjectConfigNotFound
 	}
@@ -131,6 +139,7 @@ func (g *Gateway) CreateProject(ctx context.Context, req *entity.CreateProjectRe
 			}
 		}
 	`)
+
 	if err != nil {
 		return nil, err
 	}
@@ -140,9 +149,11 @@ func (g *Gateway) CreateProject(ctx context.Context, req *entity.CreateProjectRe
 	var resp struct {
 		Project *entity.Project `json:"createProject"`
 	}
+
 	if err := gqlReq.Run(ctx, &resp); err != nil {
 		return nil, errors.ProjectCreateFailed
 	}
+
 	return resp.Project, nil
 }
 
@@ -155,6 +166,7 @@ func (g *Gateway) CreateProjectFromTemplate(ctx context.Context, req *entity.Cre
 			}
 		}
 	`)
+
 	if err != nil {
 		return nil, err
 	}
@@ -169,9 +181,11 @@ func (g *Gateway) CreateProjectFromTemplate(ctx context.Context, req *entity.Cre
 	var resp struct {
 		Result *entity.CreateProjectFromTemplateResult `json:"createProjectFromTemplate"`
 	}
+
 	if err := gqlReq.Run(ctx, &resp); err != nil {
 		return nil, errors.ProjectCreateFromTemplateFailed
 	}
+
 	return resp.Result, nil
 }
 
@@ -184,17 +198,21 @@ func (g *Gateway) UpdateProject(ctx context.Context, req *entity.UpdateProjectRe
 			}
 		}
 	`)
+
 	if err != nil {
 		return nil, err
 	}
 
 	gqlReq.Var("projectId", req.Id)
+
 	var resp struct {
 		Project *entity.Project `json:"createProject"`
 	}
+
 	if err := gqlReq.Run(ctx, &resp); err != nil {
 		return nil, err
 	}
+
 	return resp.Project, nil
 }
 
@@ -204,14 +222,17 @@ func (g *Gateway) DeleteProject(ctx context.Context, projectId string) error {
 			deleteProject(projectId: $projectId)
 		}
 	`)
+
 	if err != nil {
 		return err
 	}
 
 	gqlReq.Var("projectId", projectId)
+
 	var resp struct {
 		Deleted bool `json:"deleteProject"`
 	}
+
 	return gqlReq.Run(ctx, &resp)
 }
 
@@ -249,6 +270,7 @@ func (g *Gateway) GetProjects(ctx context.Context) ([]*entity.Project, error) {
 			}
 		}
 	`, projectFrag, projectFrag))
+
 	if err != nil {
 		return nil, err
 	}
@@ -272,15 +294,19 @@ func (g *Gateway) GetProjects(ctx context.Context) ([]*entity.Project, error) {
 
 	for _, project := range resp.Me.Projects {
 		name := "Me"
+
 		if resp.Me.Name != nil {
 			name = *resp.Me.Name
 		}
+
 		project.Team = &name
 	}
+
 	for _, team := range resp.Me.Teams {
 		for _, project := range team.Projects {
 			project.Team = &team.Name
 		}
+
 		projects = append(projects, team.Projects...)
 	}
 

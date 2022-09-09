@@ -12,8 +12,10 @@ func (c *Controller) CreatePlugin(ctx context.Context, req *entity.CreatePluginR
 
 func (c *Controller) GetAvailablePlugins(ctx context.Context, projectId string) ([]string, error) {
 	plugins, err := c.gtwy.GetAvailablePlugins(ctx, projectId)
+
 	if err != nil {
 		return nil, err
 	}
+
 	return plugins, nil
 }

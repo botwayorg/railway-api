@@ -13,6 +13,7 @@ func (g *Gateway) GetWritableGithubScopes(ctx context.Context) ([]string, error)
 			getWritableGithubScopes 
 		}
 	`)
+
 	if err != nil {
 		return nil, err
 	}
@@ -20,8 +21,10 @@ func (g *Gateway) GetWritableGithubScopes(ctx context.Context) ([]string, error)
 	var resp struct {
 		Scopes []string `json:"getWritableGithubScopes"`
 	}
+
 	if err := gqlReq.Run(ctx, &resp); err != nil {
 		return nil, errors.ProblemFetchingWritableGithubScopes
 	}
+
 	return resp.Scopes, nil
 }

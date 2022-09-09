@@ -20,6 +20,7 @@ func (g *Gateway) GetStarters(ctx context.Context) ([]*entity.Starter, error) {
 	var resp struct {
 		Starters []*entity.Starter `json:"getAllStarters"`
 	}
+
 	if err := gqlReq.Run(ctx, &resp); err != nil {
 		return nil, err
 	}

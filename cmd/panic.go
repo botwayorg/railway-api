@@ -11,6 +11,7 @@ import (
 
 func (h *Handler) Panic(ctx context.Context, panicErr string, stacktrace string, cmd string, args []string) error {
 	cmd = cmd + " " + strings.Join(args, " ")
+
 	for _, arg := range args {
 		if arg == "-v" {
 			// Verbose mode show err
@@ -22,9 +23,11 @@ func (h *Handler) Panic(ctx context.Context, panicErr string, stacktrace string,
 	if err != nil {
 		return err
 	}
+
 	if success {
 		ui.StopSpinner("Successfully sent the error! We're figuring out what went wrong.")
 		return nil
 	}
+
 	return errors.TelemetryFailed
 }

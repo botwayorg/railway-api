@@ -13,6 +13,7 @@ func (g *Gateway) GetAvailablePlugins(ctx context.Context, projectId string) ([]
 			availablePluginsForProject(projectId: $projectId)
 		}
 	`)
+
 	if err != nil {
 		return nil, err
 	}
@@ -22,9 +23,11 @@ func (g *Gateway) GetAvailablePlugins(ctx context.Context, projectId string) ([]
 	var resp struct {
 		Plugins []string `json:"availablePluginsForProject"`
 	}
+
 	if err := gqlReq.Run(ctx, &resp); err != nil {
 		return nil, errors.PluginGetFailed
 	}
+
 	return resp.Plugins, nil
 }
 
@@ -37,6 +40,7 @@ func (g *Gateway) CreatePlugin(ctx context.Context, req *entity.CreatePluginRequ
 			}
 		}
 	`)
+
 	if err != nil {
 		return nil, err
 	}
@@ -47,8 +51,10 @@ func (g *Gateway) CreatePlugin(ctx context.Context, req *entity.CreatePluginRequ
 	var resp struct {
 		Plugin *entity.Plugin `json:"createPlugin"`
 	}
+
 	if err := gqlReq.Run(ctx, &resp); err != nil {
 		return nil, errors.PluginCreateFailed
 	}
+
 	return resp.Plugin, nil
 }

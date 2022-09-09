@@ -61,10 +61,13 @@ func (c *Controller) GetEnvs(ctx context.Context, environment *entity.Environmen
 
 	if val, ok := projectCfg.LockedEnvsNames[environment.Id]; ok && val {
 		fmt.Println(ui.Bold(ui.RedText("Protected Environment Detected!").String()))
+
 		confirm, err := ui.PromptYesNo("Continue fetching variables?")
+
 		if err != nil {
 			return nil, err
 		}
+
 		if !confirm {
 			return nil, nil
 		}
@@ -79,39 +82,49 @@ func (c *Controller) GetEnvs(ctx context.Context, environment *entity.Environmen
 
 func (c *Controller) AutoImportDotEnv(ctx context.Context) error {
 	dir, err := os.Getwd()
+
 	if err != nil {
 		return err
 	}
 
 	envFileLocation := fmt.Sprintf("%s/.env", dir)
+
 	if _, err := os.Stat(envFileLocation); err == nil {
 		// path/to/whatever does not exist
 		shouldImportEnvs, err := ui.PromptYesNo("\n.env detected!\nImport your variables into Railway?")
+
 		if err != nil {
 			return err
 		}
+
 		// If the user doesn't want to import envs skip
 		if !shouldImportEnvs {
 			return nil
 		}
+
 		// Otherwise read .env and set envs
 		err = godotenv.Load()
 		if err != nil {
 			return err
 		}
+
 		envMap, err := godotenv.Read()
+
 		if err != nil {
 			return err
 		}
+
 		if len(envMap) > 0 {
 			return c.UpdateEnvs(ctx, (*entity.Envs)(&envMap), nil, false)
 		}
 	}
+
 	return nil
 }
 
 func (c *Controller) SaveEnvsToFile(ctx context.Context) error {
 	envs, err := c.GetEnvsForCurrentEnvironment(ctx, nil)
+
 	if err != nil {
 		return err
 	}
@@ -152,6 +165,7 @@ func (c *Controller) UpdateEnvs(ctx context.Context, envs *entity.Envs, serviceN
 
 	// Get service id from name
 	serviceID := ""
+
 	if serviceName != nil && *serviceName != "" {
 		for _, service := range project.Services {
 			if service.Name == *serviceName {
@@ -169,6 +183,7 @@ func (c *Controller) UpdateEnvs(ctx context.Context, envs *entity.Envs, serviceN
 		if err != nil {
 			return err
 		}
+
 		if service != nil {
 			serviceID = service.ID
 		}
@@ -213,6 +228,7 @@ func (c *Controller) DeleteEnvs(ctx context.Context, names []string, serviceName
 
 	// Get service id from name
 	serviceID := ""
+
 	if serviceName != nil && *serviceName != "" {
 		for _, service := range project.Services {
 			if service.Name == *serviceName {
@@ -230,6 +246,7 @@ func (c *Controller) DeleteEnvs(ctx context.Context, names []string, serviceName
 		if err != nil {
 			return err
 		}
+
 		if service != nil {
 			serviceID = service.ID
 		}

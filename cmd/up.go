@@ -39,24 +39,31 @@ func (h *Handler) Up(ctx context.Context, req *entity.CommandRequest) error {
 	fmt.Print(ui.VerboseInfo(isVerbose, fmt.Sprintf("Uploading directory %s", src)))
 
 	fmt.Print(ui.VerboseInfo(isVerbose, "Loading environment"))
+
 	environmentName, err := req.Cmd.Flags().GetString("environment")
+
 	if err != nil {
 		return err
 	}
 
 	environment, err := h.getEnvironment(ctx, environmentName)
+
 	if err != nil {
 		return err
 	}
+
 	fmt.Print(ui.VerboseInfo(isVerbose, fmt.Sprintf("Using environment %s", ui.Bold(environment.Name))))
 
 	fmt.Print(ui.VerboseInfo(isVerbose, "Loading project"))
+
 	project, err := h.ctrl.GetProject(ctx, projectConfig.Project)
+
 	if err != nil {
 		return err
 	}
 
 	serviceId := ""
+
 	if serviceName != "" {
 		for _, service := range project.Services {
 			if service.Name == serviceName {
@@ -72,7 +79,9 @@ func (h *Handler) Up(ctx context.Context, req *entity.CommandRequest) error {
 	// If service has not been provided via flag, prompt for it
 	if serviceId == "" {
 		fmt.Print(ui.VerboseInfo(isVerbose, "Loading services"))
+
 		service, err := ui.PromptServices(project.Services)
+
 		if err != nil {
 			return err
 		}
@@ -83,6 +92,7 @@ func (h *Handler) Up(ctx context.Context, req *entity.CommandRequest) error {
 	}
 
 	_, err = ioutil.ReadFile(".railwayignore")
+
 	if err == nil {
 		fmt.Print(ui.VerboseInfo(isVerbose, "Using ignore file .railwayignore"))
 	}
@@ -90,19 +100,23 @@ func (h *Handler) Up(ctx context.Context, req *entity.CommandRequest) error {
 	ui.StartSpinner(&ui.SpinnerCfg{
 		Message: "Laying tracks in the clouds...",
 	})
+
 	res, err := h.ctrl.Upload(ctx, &entity.UploadRequest{
 		ProjectID:     projectConfig.Project,
 		EnvironmentID: environment.Id,
 		ServiceID:     serviceId,
 		RootDir:       src,
 	})
+
 	if err != nil {
 		ui.StopSpinner("")
 		return err
 	} else {
 		ui.StopSpinner(fmt.Sprintf("☁️ Build logs available at %s\n", ui.GrayText(res.URL)))
 	}
+
 	detach, err := req.Cmd.Flags().GetBool("detach")
+
 	if err != nil {
 		return err
 	}
@@ -112,15 +126,18 @@ func (h *Handler) Up(ctx context.Context, req *entity.CommandRequest) error {
 
 	for i := 0; i < 3; i++ {
 		err = h.ctrl.GetActiveBuildLogs(ctx, 0)
+
 		if err == nil {
 			break
 		}
+
 		time.Sleep(time.Duration(i) * 250 * time.Millisecond)
 	}
 
 	fmt.Printf("\n\n======= Build Completed ======\n\n")
 
 	err = h.ctrl.GetActiveDeploymentLogs(ctx, 1000)
+
 	if err != nil {
 		return err
 	}

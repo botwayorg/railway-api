@@ -21,6 +21,7 @@ const (
 
 func PromptInit() (Selection, error) {
 	_, selection, err := selectString("Starting Point", []string{string(InitNew), string(InitFromTemplate)})
+
 	return Selection(selection), err
 }
 
@@ -28,6 +29,7 @@ func PromptText(text string) (string, error) {
 	prompt := promptui.Prompt{
 		Label: text,
 	}
+
 	return prompt.Run()
 }
 
@@ -51,6 +53,7 @@ func promptTeams(projects []*entity.Project) (*string, error) {
 	if hasTeams(projects) {
 		teams := make([]string, 0)
 		teamCheck := make(map[string]bool)
+
 		for _, project := range projects {
 			if project.Team == nil {
 				continue
@@ -64,6 +67,7 @@ func promptTeams(projects []*entity.Project) (*string, error) {
 		}
 
 		_, team, err := selectString("Team", teams)
+
 		return &team, err
 	}
 
@@ -73,9 +77,11 @@ func promptTeams(projects []*entity.Project) (*string, error) {
 func PromptProjects(projects []*entity.Project) (*entity.Project, error) {
 	// Check if need to prompt teams
 	team, err := promptTeams(projects)
+
 	if err != nil {
 		return nil, err
 	}
+
 	filteredProjects := make([]*entity.Project, 0)
 
 	if team == nil {
@@ -95,6 +101,7 @@ func PromptProjects(projects []*entity.Project) (*entity.Project, error) {
 	i, _, err := selectCustom("Project", filteredProjects, func(index int) string {
 		return filteredProjects[index].Name
 	})
+
 	return filteredProjects[i], err
 }
 
@@ -109,11 +116,13 @@ func PromptStarterTemplates(starters []*entity.Starter) (*entity.Starter, error)
 
 func PromptIsRepoPrivate() (bool, error) {
 	_, visibility, err := selectString("Visibility", []string{"Public", "Private"})
+
 	return visibility == "Private", err
 }
 
 func PromptEnvVars(envVars []*entity.StarterEnvVar) (map[string]string, error) {
 	variables := make(map[string]string)
+
 	if len(envVars) > 0 {
 		fmt.Printf("\n%s\n", Bold("Environment Variables"))
 	}
@@ -123,6 +132,7 @@ func PromptEnvVars(envVars []*entity.StarterEnvVar) (map[string]string, error) {
 			Label:   envVar.Name,
 			Default: envVar.Default,
 		}
+
 		if envVar.Optional {
 			fmt.Printf("\n%s %s\n", envVar.Desc, GrayText("(Optional)"))
 		} else {
@@ -131,6 +141,7 @@ func PromptEnvVars(envVars []*entity.StarterEnvVar) (map[string]string, error) {
 		}
 
 		v, err := prompt.Run()
+
 		if err != nil {
 			return nil, err
 		}
@@ -155,6 +166,7 @@ func PromptProjectName() (string, error) {
 		},
 		Validate: validatorRequired("project name required"),
 	}
+
 	return prompt.Run()
 }
 
@@ -168,6 +180,7 @@ func PromptConfirmProjectName() (string, error) {
 			Success: fmt.Sprintf("%s {{ . | magenta | bold }}: ", promptui.IconGood),
 		},
 	}
+
 	return prompt.Run()
 }
 
@@ -178,6 +191,7 @@ func PromptGitHubScopes(scopes []string) (string, error) {
 	}
 
 	_, scope, err := selectString("GitHub Owner", scopes)
+
 	return scope, err
 }
 
@@ -185,11 +199,14 @@ func PromptEnvironments(environments []*entity.Environment) (*entity.Environment
 	if len(environments) == 1 {
 		environment := environments[0]
 		fmt.Printf("%s Environment: %s\n", promptui.IconGood, BlueText(environment.Name))
+
 		return environment, nil
 	}
+
 	i, _, err := selectCustom("Environment", environments, func(index int) string {
 		return environments[index].Name
 	})
+
 	if err != nil {
 		return nil, err
 	}
@@ -201,12 +218,15 @@ func PromptServices(services []*entity.Service) (*entity.Service, error) {
 	if len(services) == 0 {
 		return &entity.Service{}, nil
 	}
+
 	if len(services) == 1 {
 		return services[0], nil
 	}
+
 	i, _, err := selectCustom("Service", services, func(index int) string {
 		return services[index].Name
 	})
+
 	if err != nil {
 		return nil, err
 	}
@@ -216,17 +236,22 @@ func PromptServices(services []*entity.Service) (*entity.Service, error) {
 
 func PromptPlugins(plugins []string) (string, error) {
 	i, _, err := selectString("Plugin", plugins)
+
 	return plugins[i], err
 }
 
 // PromptYesNo prompts the user to continue an action using the common (y/N) action
 func PromptYesNo(msg string) (bool, error) {
 	fmt.Printf("%s (y/N): ", msg)
+
 	var response string
+
 	_, err := fmt.Scan(&response)
+
 	if err != nil {
 		return false, err
 	}
+
 	response = strings.ToLower(response)
 
 	isNo := response == "n" || response == "no"
@@ -238,6 +263,7 @@ func PromptYesNo(msg string) (bool, error) {
 		return false, nil
 	} else {
 		fmt.Println("Please type yes or no and then press enter:")
+
 		return PromptYesNo(msg)
 	}
 }
@@ -247,6 +273,7 @@ func validatorRequired(errorMsg string) func(s string) error {
 		if strings.TrimSpace(s) == "" {
 			return errors.New(errorMsg)
 		}
+
 		return nil
 	}
 }
@@ -276,10 +303,13 @@ func selectString(label string, items []string) (int, string, error) {
 // is responsible for returning a label for the item, when called.
 func selectCustom(label string, items interface{}, stringify func(index int) string) (int, string, error) {
 	v := reflect.ValueOf(items)
+
 	if v.Kind() != reflect.Slice {
 		panic(fmt.Errorf("forEachValue: expected slice type, found %q", v.Kind().String()))
 	}
+
 	wrappedItems := make([]selectItemWrapper, 0)
+
 	for i := 0; i < v.Len(); i++ {
 		wrappedItems = append(wrappedItems, selectItemWrapper{
 			stringify: stringify,

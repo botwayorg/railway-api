@@ -20,8 +20,10 @@ type Randomizer struct {
 // case the caller should not continue.
 func (r *Randomizer) Bytes(n int) ([]byte, error) {
 	b := make([]byte, n)
+
 	_, err := cryptoRand.Read(b)
 	// Note that err == nil only if we read len(b) bytes.
+
 	if err != nil {
 		return nil, err
 	}
@@ -33,6 +35,7 @@ func (r *Randomizer) Bytes(n int) ([]byte, error) {
 // securely generated random string.
 func (r *Randomizer) String(s int) (string, error) {
 	b, err := r.Bytes(s)
+
 	return base64.URLEncoding.EncodeToString(b), err
 }
 
@@ -49,15 +52,19 @@ func (r *Randomizer) NumberBetween(n int, m int) int {
 // Port asks the kernel for an available port
 func (r *Randomizer) Port() (int, error) {
 	addr, err := net.ResolveTCPAddr("tcp", "localhost:0")
+
 	if err != nil {
 		return 0, err
 	}
 
 	l, err := net.ListenTCP("tcp", addr)
+
 	if err != nil {
 		return 0, err
 	}
+
 	defer l.Close()
+
 	return l.Addr().(*net.TCPAddr).Port, nil
 }
 
@@ -69,9 +76,11 @@ func (r *Randomizer) Code() string {
 // New returns a preseeded randomizer
 func New() *Randomizer {
 	randomizer := mathRand.New(mathRand.NewSource(time.Now().UTC().UnixNano()))
+
 	if randomizer == nil {
 		panic("Failed to start random number generator")
 	}
+
 	return &Randomizer{
 		*randomizer,
 	}

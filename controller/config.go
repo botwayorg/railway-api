@@ -12,6 +12,7 @@ func (c *Controller) GetProjectConfigs(ctx context.Context) (*entity.ProjectConf
 	if c.cfg.RailwayProductionToken != "" {
 		// Get project config from api
 		projectToken, err := c.gtwy.GetProjectToken(ctx)
+
 		if err != nil {
 			return nil, err
 		}
@@ -30,16 +31,20 @@ func (c *Controller) GetProjectConfigs(ctx context.Context) (*entity.ProjectConf
 
 func (c *Controller) PromptIfProtectedEnvironment(ctx context.Context) error {
 	projectCfg, err := c.GetProjectConfigs(ctx)
+
 	if err != nil {
 		return err
 	}
 
 	if val, ok := projectCfg.LockedEnvsNames[projectCfg.Environment]; ok && val {
 		fmt.Println(ui.Bold(ui.RedText("Protected Environment Detected!").String()))
+
 		confirm, err := ui.PromptYesNo("Continue?")
+
 		if err != nil {
 			return err
 		}
+
 		if !confirm {
 			return nil
 		}

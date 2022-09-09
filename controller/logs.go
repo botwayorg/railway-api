@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	GQL_SOFT_ERROR = "Error fetching build logs"
+	GQL_SOFT_ERROR = "error fetching build logs"
 )
 
 func (c *Controller) GetActiveDeploymentLogs(ctx context.Context, numLines int32) error {
@@ -61,6 +61,7 @@ func (c *Controller) logsForState(ctx context.Context, req *entity.DeploymentLog
 		ProjectID:    req.ProjectID,
 		GQL:          c.getQuery(ctx, ""),
 	})
+
 	if err != nil {
 		return err
 	}
@@ -68,6 +69,7 @@ func (c *Controller) logsForState(ctx context.Context, req *entity.DeploymentLog
 	// Print Logs w/ Limit
 	logLines := strings.Split(logsForState(ctx, deploy.Status, deploy), "\n")
 	offset := 0.0
+
 	if req.NumLines != 0 {
 		// If a limit is set, walk it back n steps (with a min of zero so no panics)
 		offset = math.Max(float64(len(logLines))-float64(req.NumLines)-1, 0.0)
@@ -81,12 +83,13 @@ func (c *Controller) logsForState(ctx context.Context, req *entity.DeploymentLog
 
 	// Output Initial Logs
 	currLogs := strings.Join(logLines[int(offset):], "\n")
+
 	if len(currLogs) > 0 {
 		fmt.Println(currLogs)
 	}
 
 	if deploy.Status == entity.STATUS_FAILED {
-		return errors.New("Build Failed! Please see output for more information")
+		return errors.New("build Failed! Please see output for more information")
 	}
 
 	prevDeploy := deploy
@@ -95,14 +98,17 @@ func (c *Controller) logsForState(ctx context.Context, req *entity.DeploymentLog
 
 	for !deltaState && req.NumLines == 0 {
 		time.Sleep(2 * time.Second)
+
 		currDeploy, err := c.gtwy.GetDeploymentByID(ctx, &entity.DeploymentByIDRequest{
 			DeploymentID: req.DeploymentID,
 			ProjectID:    req.ProjectID,
 			GQL:          c.getQuery(ctx, logState),
 		})
+
 		if err != nil {
 			return err
 		}
+
 		// Current Logs fetched from server
 		currLogs := strings.Split(logsForState(ctx, logState, currDeploy), "\n")
 		// Previous logs fetched from prevDeploy variable
@@ -113,12 +119,14 @@ func (c *Controller) logsForState(ctx context.Context, req *entity.DeploymentLog
 		if len(logDiff) == 0 {
 			continue
 		}
+
 		// Output logs
 		fmt.Println(strings.Join(logDiff, "\n"))
 		// Set out walk pointer forward using the newest logs
 		deltaState = hasTransitioned(prevDeploy, currDeploy)
 		prevDeploy = currDeploy
 	}
+
 	return nil
 }
 
@@ -138,6 +146,7 @@ func logsForState(ctx context.Context, status string, deploy *entity.Deployment)
 	if status == entity.STATUS_BUILDING {
 		return deploy.BuildLogs
 	}
+
 	return deploy.DeployLogs
 }
 
@@ -147,5 +156,6 @@ func errFromGQL(ctx context.Context, logLines []string) error {
 			return errors.New(GQL_SOFT_ERROR)
 		}
 	}
+
 	return nil
 }

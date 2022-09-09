@@ -14,11 +14,13 @@ func (h *Handler) Connect(ctx context.Context, req *entity.CommandRequest) error
 	projectCfg, _ := h.ctrl.GetProjectConfigs(ctx)
 
 	project, err := h.ctrl.GetProject(ctx, projectCfg.Project)
+
 	if err != nil {
 		return err
 	}
 
 	environment, err := h.ctrl.GetCurrentEnvironment(ctx)
+
 	if err != nil {
 		return err
 	}
@@ -29,6 +31,7 @@ func (h *Handler) Connect(ctx context.Context, req *entity.CommandRequest) error
 
 	if len(req.Args) == 0 {
 		names := make([]string, 0)
+
 		for _, plugin := range project.Plugins {
 			// TODO: Better way of handling this
 			if plugin.Name != "env" {
@@ -37,7 +40,9 @@ func (h *Handler) Connect(ctx context.Context, req *entity.CommandRequest) error
 		}
 
 		fmt.Println("Select a database to connect to:")
+
 		plugin, err = ui.PromptPlugins(names)
+
 		if err != nil {
 			return err
 		}
@@ -46,22 +51,27 @@ func (h *Handler) Connect(ctx context.Context, req *entity.CommandRequest) error
 	}
 
 	if !isPluginValid(plugin) {
-		return fmt.Errorf("Invalid plugin: %s", plugin)
+		return fmt.Errorf("invalid plugin: %s", plugin)
 	}
+
 	envs, err := h.ctrl.GetEnvsForCurrentEnvironment(ctx, nil)
+
 	if err != nil {
 		return err
 	}
 
 	command, connectEnv := buildConnectCommand(plugin, envs)
+
 	if !commandExistsInPath(command[0]) {
 		fmt.Println("🚨", ui.RedText(command[0]), "was not found in $PATH.")
+
 		return nil
 	}
 
 	cmd := exec.CommandContext(ctx, command[0], command[1:]...)
 
 	cmd.Env = os.Environ()
+
 	for k, v := range connectEnv {
 		cmd.Env = append(cmd.Env, fmt.Sprintf("%s=%+v", k, v))
 	}
@@ -69,9 +79,11 @@ func (h *Handler) Connect(ctx context.Context, req *entity.CommandRequest) error
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stdout
 	cmd.Stdin = os.Stdin
+
 	catchSignals(ctx, cmd, nil)
 
 	err = cmd.Run()
+
 	if err != nil {
 		return err
 	}
@@ -83,6 +95,7 @@ func commandExistsInPath(cmd string) bool {
 	// The error can be safely ignored because it indicates a failure to find the
 	// command in $PATH.
 	_, err := exec.LookPath(cmd)
+
 	return err == nil
 }
 
@@ -90,18 +103,25 @@ func isPluginValid(plugin string) bool {
 	switch plugin {
 	case "redis":
 		fallthrough
+
 	case "psql":
 		fallthrough
+
 	case "postgres":
 		fallthrough
+
 	case "postgresql":
 		fallthrough
+
 	case "mysql":
 		fallthrough
+
 	case "mongo":
 		fallthrough
+
 	case "mongodb":
 		return true
+
 	default:
 		return false
 	}
@@ -115,14 +135,18 @@ func buildConnectCommand(plugin string, envs *entity.Envs) ([]string, map[string
 	case "redis":
 		// run
 		command = []string{"redis-cli", "-u", (*envs)["REDIS_URL"]}
+
 	case "psql":
 		fallthrough
+
 	case "postgres":
 		fallthrough
+
 	case "postgresql":
 		connectEnv = map[string]string{
 			"PGPASSWORD": (*envs)["PGPASSWORD"],
 		}
+
 		command = []string{
 			"psql",
 			"-U",
@@ -134,8 +158,10 @@ func buildConnectCommand(plugin string, envs *entity.Envs) ([]string, map[string
 			"-d",
 			(*envs)["PGDATABASE"],
 		}
+
 	case "mongo":
 		fallthrough
+
 	case "mongodb":
 		command = []string{
 			"mongo",
@@ -147,6 +173,7 @@ func buildConnectCommand(plugin string, envs *entity.Envs) ([]string, map[string
 				(*envs)["MONGOPORT"],
 			),
 		}
+
 	case "mysql":
 		command = []string{
 			"mysql",
@@ -158,5 +185,6 @@ func buildConnectCommand(plugin string, envs *entity.Envs) ([]string, map[string
 			(*envs)["MYSQLDATABASE"],
 		}
 	}
+
 	return command, connectEnv
 }

@@ -24,6 +24,7 @@ func (h *Handler) getEnvironment(ctx context.Context, environmentName string) (*
 	if environmentName == "" {
 		return h.ctrl.GetCurrentEnvironment(ctx)
 	}
+
 	return h.ctrl.GetEnvironmentByName(ctx, environmentName)
 }
 
@@ -57,11 +58,13 @@ func (h *Handler) Run(ctx context.Context, req *entity.CommandRequest) error {
 			if len(matched) < 2 {
 				return goErr.New("missing environment selection! \n(e.g --environment=production)")
 			}
+
 			targetEnvironment = matched[1]
 		} else if matched := rgxService.FindStringSubmatch(arg); matched != nil {
 			if len(matched) < 2 {
 				return goErr.New("missing service selection! \n(e.g --service=serviceName)")
 			}
+
 			targetServiceName = &matched[1]
 		} else {
 			parsedArgs = append(parsedArgs, arg)
@@ -82,16 +85,20 @@ func (h *Handler) Run(ctx context.Context, req *entity.CommandRequest) error {
 		environmentName := fmt.Sprintf("%s-ephemeral", environment.Name)
 		fmt.Printf("Spinning up Ephemeral Environment: %s\n", ui.BlueText(environmentName))
 		// Create new environment for this run
+
 		environment, err = h.ctrl.CreateEphemeralEnvironment(ctx, &entity.CreateEphemeralEnvironmentRequest{
 			Name:              environmentName,
 			ProjectID:         projectCfg.Project,
 			BaseEnvironmentID: environment.Id,
 		})
+
 		if err != nil {
 			return err
 		}
+
 		fmt.Println("Done!")
 	}
+
 	envs, err := h.ctrl.GetEnvs(ctx, environment, targetServiceName)
 
 	if err != nil {
@@ -137,17 +144,21 @@ func (h *Handler) Run(ctx context.Context, req *entity.CommandRequest) error {
 			EnvironmentId: environment.Id,
 			ProjectID:     projectCfg.Project,
 		})
+
 		if err != nil {
 			return err
 		}
+
 		fmt.Println("Done!")
 	}
 
 	if err != nil {
 		fmt.Println(err.Error())
+
 		if exitError, ok := err.(*exec.ExitError); ok {
 			os.Exit(exitError.ExitCode())
 		}
+
 		os.Exit(1)
 	}
 
@@ -192,13 +203,17 @@ func (h *Handler) runInDocker(ctx context.Context, pwd string, envs *entity.Envs
 	buildCmd.Stderr = os.Stderr
 
 	err = buildCmd.Start()
+
 	if err != nil {
 		return err
 	}
+
 	err = buildCmd.Wait()
+
 	if err != nil {
 		return err
 	}
+
 	fmt.Printf("🎉 Built %s\n", ui.GreenText(image))
 
 	// Attempt to use
@@ -221,6 +236,7 @@ func (h *Handler) runInDocker(ctx context.Context, pwd string, envs *entity.Envs
 	for k, v := range *envs {
 		runArgs = append(runArgs, "-e", fmt.Sprintf("%s=%+v", k, v))
 	}
+
 	runArgs = append(runArgs, image)
 
 	// Run the container
@@ -238,6 +254,7 @@ func (h *Handler) runInDocker(ctx context.Context, pwd string, envs *entity.Envs
 	logCmd.Stderr = os.Stderr
 
 	err = logCmd.Start()
+
 	if err != nil {
 		return err
 	}
@@ -245,7 +262,9 @@ func (h *Handler) runInDocker(ctx context.Context, pwd string, envs *entity.Envs
 	catchSignals(ctx, logCmd, func() {
 		err = exec.Command("docker", "rm", "-f", string(containerId)).Run()
 	})
+
 	err = logCmd.Wait()
+
 	if err != nil && !strings.Contains(err.Error(), "255") {
 		// 255 is a graceeful exit with ctrl + c
 		return err
@@ -258,20 +277,25 @@ func (h *Handler) runInDocker(ctx context.Context, pwd string, envs *entity.Envs
 
 func getAvailablePort() (string, error) {
 	searchRange := 64
+
 	for i := RAIL_PORT; i < RAIL_PORT+searchRange; i++ {
 		if isAvailable(i) {
 			return strconv.Itoa(i), nil
 		}
 	}
-	return "", fmt.Errorf("Couldn't find available port between %d and %d", RAIL_PORT, RAIL_PORT+searchRange)
+
+	return "", fmt.Errorf("couldn't find available port between %d and %d", RAIL_PORT, RAIL_PORT+searchRange)
 }
 
 func isAvailable(port int) bool {
 	ln, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+
 	if err != nil {
 		return false
 	}
+
 	_ = ln.Close()
+
 	return true
 }
 
@@ -279,12 +303,15 @@ func catchSignals(_ context.Context, cmd *exec.Cmd, onSignal context.CancelFunc)
 	sigs := make(chan os.Signal, 1)
 
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+
 	go func() {
 		sig := <-sigs
 		err := cmd.Process.Signal(sig)
+
 		if onSignal != nil {
 			onSignal()
 		}
+
 		if err != nil {
 			fmt.Println("Child process error: \n", err)
 		}

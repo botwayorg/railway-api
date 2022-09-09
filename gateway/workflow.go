@@ -15,6 +15,7 @@ func (g *Gateway) GetWorkflowStatus(ctx context.Context, workflowID string) (ent
 			}
 		}
 	`)
+
 	if err != nil {
 		return "", err
 	}
@@ -24,8 +25,10 @@ func (g *Gateway) GetWorkflowStatus(ctx context.Context, workflowID string) (ent
 	var resp struct {
 		WorkflowStatus *entity.WorkflowStatusResponse `json:"getWorkflowStatus"`
 	}
+
 	if err := gqlReq.Run(ctx, &resp); err != nil {
 		return "", errors.ProjectCreateFailed
 	}
+
 	return resp.WorkflowStatus.Status, nil
 }

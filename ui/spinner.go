@@ -34,9 +34,11 @@ func StartSpinner(cfg *SpinnerCfg) {
 	if cfg.Tokens == nil {
 		cfg.Tokens = TrainEmojis
 	}
+
 	if cfg.Duration.Microseconds() == 0 {
 		cfg.Duration = time.Duration(100) * time.Millisecond
 	}
+
 	s = spinner.New(cfg.Tokens, cfg.Duration)
 	s.Writer = os.Stdout
 

@@ -12,6 +12,7 @@ import (
 	"time"
 
 	configs "github.com/botwayorg/railway-api/configs"
+	"github.com/abdfnx/botway/constants"
 	"github.com/botwayorg/railway-api/entity"
 	"github.com/botwayorg/railway-api/errors"
 	"github.com/botwayorg/railway-api/ui"
@@ -39,12 +40,15 @@ const pollInterval = 1 * time.Second
 
 func (c *Controller) GetUser(ctx context.Context) (*entity.User, error) {
 	userCfg, err := c.cfg.GetUserConfigs()
+
 	if err != nil {
 		return nil, err
 	}
+
 	if userCfg.Token == "" {
 		return nil, errors.UserConfigNotFound
 	}
+
 	return c.gtwy.GetUser(ctx)
 }
 
@@ -61,6 +65,7 @@ func (c *Controller) browserBasedLogin(ctx context.Context) (*entity.User, error
 
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
+
 	go func() {
 		ctx := context.Background()
 		srv := &http.Server{Addr: strconv.Itoa(port)}
@@ -75,14 +80,18 @@ func (c *Controller) browserBasedLogin(ctx context.Context) (*entity.User, error
 				if code != returnedCode {
 					res := LoginResponse{Error: loginInvalidResponse}
 					byteRes, err := json.Marshal(&res)
+
 					if err != nil {
 						fmt.Println(err)
 					}
+
 					w.WriteHeader(400)
+
 					_, err = w.Write(byteRes)
 					if err != nil {
 						fmt.Println("Invalid login response failed to serialize!")
 					}
+
 					return
 				}
 
@@ -92,8 +101,11 @@ func (c *Controller) browserBasedLogin(ctx context.Context) (*entity.User, error
 				if err != nil {
 					fmt.Println(err)
 				}
+
 				w.WriteHeader(200)
+
 				_, err = w.Write(byteRes)
+
 				if err != nil {
 					fmt.Println("Valid login response failed to serialize!")
 				}
@@ -102,6 +114,7 @@ func (c *Controller) browserBasedLogin(ctx context.Context) (*entity.User, error
 				w.Header().Set("Access-Control-Allow-Headers", "*")
 				w.Header().Set("Content-Length", "0")
 				w.WriteHeader(204)
+
 				return
 			}
 
@@ -125,7 +138,7 @@ func (c *Controller) browserBasedLogin(ctx context.Context) (*entity.User, error
 		return c.browserlessLogin(ctx)
 	}
 
-	fmt.Println("No dice? Try railway login --browserless")
+	fmt.Println("No dice? Try botway login railway --browserless")
 
 	wg.Wait()
 
@@ -136,6 +149,7 @@ func (c *Controller) browserBasedLogin(ctx context.Context) (*entity.User, error
 	err = c.cfg.SetUserConfigs(&entity.UserConfig{
 		Token: token,
 	})
+
 	if err != nil {
 		return nil, err
 	}
@@ -150,6 +164,7 @@ func (c *Controller) browserBasedLogin(ctx context.Context) (*entity.User, error
 
 func (c *Controller) pollForToken(ctx context.Context, code string) (string, error) {
 	var count = 0
+
 	for count < maxAttempts {
 		token, err := c.gtwy.ConsumeLoginSession(ctx, code)
 
@@ -170,16 +185,18 @@ func (c *Controller) pollForToken(ctx context.Context, code string) (string, err
 
 func (c *Controller) browserlessLogin(ctx context.Context) (*entity.User, error) {
 	wordCode, err := c.gtwy.CreateLoginSession(ctx)
+
 	if err != nil {
 		return nil, err
 	}
 
 	url := getBrowserlessLoginURL(wordCode)
 
-	fmt.Printf("Your pairing code is: %s\n", ui.MagentaText(wordCode))
+	fmt.Printf(constants.HEADING + "Your pairing code is: %s\n", constants.PRIMARY_FOREGROUND.Render(wordCode))
 	fmt.Printf("To authenticate with Railway, please go to \n    %s\n", url)
 
 	token, err := c.pollForToken(ctx, wordCode)
+
 	if err != nil {
 		return nil, err
 	}
@@ -187,6 +204,7 @@ func (c *Controller) browserlessLogin(ctx context.Context) (*entity.User, error)
 	err = c.cfg.SetUserConfigs(&entity.UserConfig{
 		Token: token,
 	})
+
 	if err != nil {
 		return nil, err
 	}
@@ -231,21 +249,26 @@ func (c *Controller) Logout(ctx context.Context) error {
 	}
 
 	fmt.Printf("👋 %s\n", ui.YellowText("Logged out"))
+
 	return nil
 }
 
 func (c *Controller) IsLoggedIn(ctx context.Context) (bool, error) {
 	userCfg, err := c.cfg.GetUserConfigs()
+
 	if err != nil {
 		return false, err
 	}
+
 	isLoggedIn := userCfg.Token != ""
+
 	return isLoggedIn, nil
 }
 
 func (c *Controller) ConfirmBrowserOpen(spinnerMsg string, url string) error {
 	fmt.Printf("Press Enter to open the browser (^C to quit)")
 	fmt.Fscanln(os.Stdin)
+
 	ui.StartSpinner(&ui.SpinnerCfg{
 		Message: spinnerMsg,
 	})
@@ -264,9 +287,11 @@ func getAPIURL() string {
 	if configs.IsDevMode() {
 		return baseLocalhostURL
 	}
+
 	if configs.IsStagingMode() {
 		return baseStagingURL
 	}
+
 	return baseRailwayURL
 }
 
@@ -283,6 +308,7 @@ func getBrowserBasedLoginURL(port int, code string) string {
 	hostname := getHostName()
 	buffer := b64.URLEncoding.EncodeToString([]byte(fmt.Sprintf("port=%d&code=%s&hostname=%s", port, code, hostname)))
 	url := fmt.Sprintf("%s/cli-login?d=%s", getAPIURL(), buffer)
+
 	return url
 }
 
@@ -291,6 +317,7 @@ func getBrowserlessLoginURL(wordCode string) string {
 	buffer := b64.URLEncoding.EncodeToString([]byte(fmt.Sprintf("wordCode=%s&hostname=%s", wordCode, hostname)))
 
 	url := fmt.Sprintf("%s/cli-login?d=%s", getAPIURL(), buffer)
+
 	return url
 }
 

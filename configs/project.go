@@ -23,6 +23,7 @@ func (c *Configs) GetProjectConfigs() (*entity.ProjectConfig, error) {
 	// TODO: Better error handling here
 
 	userCfg, err := c.GetRootConfigs()
+
 	if err != nil {
 		return nil, errors.ProjectConfigNotFound
 	}
@@ -36,6 +37,7 @@ func (c *Configs) GetProjectConfigs() (*entity.ProjectConfig, error) {
 	// find longest matching parent path
 	var longestPath = -1
 	var pathMatch = ""
+
 	for path := range userCfg.Projects {
 		var matches = strings.HasPrefix(fmt.Sprintf("%s/", cwd), fmt.Sprintf("%s/", path))
 		if matches && len(path) > longestPath {
@@ -108,6 +110,7 @@ func (c *Configs) SetProject(projectID string) error {
 	}
 
 	projectCfg.Project = projectID
+
 	return c.SetProjectConfigs(projectCfg)
 }
 
@@ -120,6 +123,7 @@ func (c *Configs) SetNewProject(projectID string) error {
 	}
 
 	projectCfg.Project = projectID
+
 	return c.SetProjectConfigs(projectCfg)
 }
 
@@ -135,6 +139,7 @@ func (c *Configs) SetEnvironment(environmentId string) error {
 	}
 
 	projectCfg.Environment = environmentId
+
 	return c.SetProjectConfigs(projectCfg)
 }
 

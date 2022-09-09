@@ -19,30 +19,39 @@ func (h *Handler) Down(ctx context.Context, req *entity.CommandRequest) error {
 	fmt.Print(ui.VerboseInfo(isVerbose, "Using verbose mode"))
 
 	fmt.Print(ui.VerboseInfo(isVerbose, "Loading project configuration"))
+
 	projectConfig, err := h.ctrl.GetProjectConfigs(ctx)
+
 	if err != nil {
 		return err
 	}
 
 	fmt.Print(ui.VerboseInfo(isVerbose, "Loading environment"))
+
 	environmentName, err := req.Cmd.Flags().GetString("environment")
+
 	if err != nil {
 		return err
 	}
 
 	environment, err := h.getEnvironment(ctx, environmentName)
+
 	if err != nil {
 		return err
 	}
+
 	fmt.Print(ui.VerboseInfo(isVerbose, fmt.Sprintf("Using environment %s", ui.Bold(environment.Name))))
 
 	fmt.Print(ui.VerboseInfo(isVerbose, "Loading project"))
+
 	project, err := h.ctrl.GetProject(ctx, projectConfig.Project)
+
 	if err != nil {
 		return err
 	}
 
 	shouldDelete, err := ui.PromptYesNo(fmt.Sprintf("Delete latest deployment for project %s?", project.Name))
+
 	if err != nil || !shouldDelete {
 		return err
 	}

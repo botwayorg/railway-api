@@ -7,22 +7,24 @@ import (
 	"strings"
 
 	"github.com/botwayorg/railway-api/ui"
-
 	"github.com/botwayorg/railway-api/entity"
 )
 
 func (h *Handler) Variables(ctx context.Context, req *entity.CommandRequest) error {
 	serviceName, err := req.Cmd.Flags().GetString("service")
+
 	if err != nil {
 		return err
 	}
 
 	envs, err := h.ctrl.GetEnvsForCurrentEnvironment(ctx, &serviceName)
+
 	if err != nil {
 		return err
 	}
 
 	environment, err := h.ctrl.GetCurrentEnvironment(ctx)
+
 	if err != nil {
 		return err
 	}
@@ -35,11 +37,13 @@ func (h *Handler) Variables(ctx context.Context, req *entity.CommandRequest) err
 
 func (h *Handler) VariablesGet(ctx context.Context, req *entity.CommandRequest) error {
 	serviceName, err := req.Cmd.Flags().GetString("service")
+
 	if err != nil {
 		return err
 	}
 
 	envs, err := h.ctrl.GetEnvsForCurrentEnvironment(ctx, &serviceName)
+
 	if err != nil {
 		return err
 	}
@@ -78,9 +82,11 @@ func (h *Handler) VariablesSet(ctx context.Context, req *entity.CommandRequest) 
 	if replace && !yes {
 		fmt.Println(ui.Bold(ui.RedText(fmt.Sprintf("Warning! You are about to fully replace all your variables for the service '%s'.", serviceName)).String()))
 		confirm, err := ui.PromptYesNo("Continue?")
+
 		if err != nil {
 			return err
 		}
+
 		if !confirm {
 			return nil
 		}
@@ -91,9 +97,11 @@ func (h *Handler) VariablesSet(ctx context.Context, req *entity.CommandRequest) 
 
 	for _, kvPair := range req.Args {
 		parts := strings.SplitN(kvPair, "=", 2)
+
 		if len(parts) != 2 {
 			return errors.New("invalid variables invocation. See --help")
 		}
+
 		key := parts[0]
 		value := parts[1]
 
@@ -209,5 +217,6 @@ func (h *Handler) redeployAfterVariablesChange(ctx context.Context, environment 
 	}
 
 	fmt.Printf("☁️ Deploy Logs available at %s\n", ui.GrayText(h.ctrl.GetServiceDeploymentsURL(ctx, latestDeploy.ProjectID, *serviceID, deployment.ID)))
+
 	return nil
 }

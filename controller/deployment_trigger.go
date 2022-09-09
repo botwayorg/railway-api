@@ -8,6 +8,7 @@ import (
 
 func (c *Controller) DeployEnvironmentTriggers(ctx context.Context, serviceID *string) error {
 	projectCfg, err := c.GetProjectConfigs(ctx)
+
 	if err != nil {
 		return err
 	}

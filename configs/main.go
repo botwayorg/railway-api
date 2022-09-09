@@ -35,9 +35,11 @@ func IsStagingMode() bool {
 
 func GetRailwayURL() string {
 	url, exists := os.LookupEnv("RAILWAY_URL")
+
 	if !exists {
 		return constants.RAILWAY_URL
 	}
+
 	return url
 }
 
@@ -56,6 +58,7 @@ func (c *Configs) CreatePathIfNotExist(path string) error {
 
 func (c *Configs) marshalConfig(config *Config, cfg interface{}) error {
 	reflectCfg := reflect.ValueOf(cfg)
+
 	for i := 0; i < reflectCfg.NumField(); i++ {
 		k := reflectCfg.Type().Field(i).Name
 		v := reflectCfg.Field(i).Interface()
@@ -77,6 +80,7 @@ func New() *Configs {
 	// Includes token, etc
 	rootViper := viper.New()
 	rootConfigPartialPath := ".botway/railway-config.json"
+
 	if IsDevMode() {
 		rootConfigPartialPath = ".botway/railway-dev-config.json"
 	}
@@ -93,7 +97,9 @@ func New() *Configs {
 	rootConfigPath := path.Join(homeDir, rootConfigPartialPath)
 
 	rootViper.SetConfigFile(rootConfigPath)
+
 	err = rootViper.ReadInConfig()
+
 	if os.IsNotExist(err) {
 		// That's okay, configs are created as needed
 	} else if err != nil {
@@ -111,10 +117,13 @@ func New() *Configs {
 	if err != nil {
 		panic(err)
 	}
+
 	projectViper := viper.New()
 
 	projectPath := path.Join(projectDir, "./config.json")
+
 	projectViper.SetConfigFile(projectPath)
+
 	err = projectViper.ReadInConfig()
 	if os.IsNotExist(err) {
 		// That's okay, configs are created as needed

@@ -14,6 +14,7 @@ func (c *Controller) SendPanic(ctx context.Context, panicErr string, stacktrace 
 	confirmSendPanic()
 
 	projectCfg, err := c.cfg.GetProjectConfigs()
+
 	if err != nil {
 		return c.gtwy.SendPanic(ctx, &entity.PanicRequest{
 			Command:       command,
@@ -23,8 +24,8 @@ func (c *Controller) SendPanic(ctx context.Context, panicErr string, stacktrace 
 			EnvironmentID: "",
 			Version:       constants.Version,
 		})
-
 	}
+
 	return c.gtwy.SendPanic(ctx, &entity.PanicRequest{
 		Command:       command,
 		PanicError:    panicErr,
@@ -39,6 +40,7 @@ func (c *Controller) SendPanic(ctx context.Context, panicErr string, stacktrace 
 func confirmSendPanic() {
 	fmt.Printf("🚨 Looks like something derailed, Press Enter to send error logs (^C to quit)")
 	fmt.Fscanln(os.Stdin)
+
 	ui.StartSpinner(&ui.SpinnerCfg{
 		Message: "Taking notes...",
 	})

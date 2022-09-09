@@ -12,6 +12,7 @@ func (g *Gateway) DeployEnvironmentTriggers(ctx context.Context, req *entity.Dep
 			deployEnvironmentTriggers(projectId: $projectId, environmentId: $environmentId, serviceId: $serviceId)
 	  	}
 	`)
+
 	if err != nil {
 		return err
 	}

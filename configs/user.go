@@ -8,6 +8,7 @@ import (
 func (c *Configs) GetUserConfigs() (*entity.UserConfig, error) {
 	var rootCfg *entity.RootConfig
 	rootCfg, err := c.GetRootConfigs()
+
 	if err != nil {
 		return nil, errors.UserConfigNotFound
 	}
@@ -22,6 +23,7 @@ func (c *Configs) GetUserConfigs() (*entity.UserConfig, error) {
 func (c *Configs) SetUserConfigs(cfg *entity.UserConfig) error {
 	var rootCfg *entity.RootConfig
 	rootCfg, err := c.GetRootConfigs()
+
 	if err != nil {
 		rootCfg = &entity.RootConfig{}
 	}

@@ -13,6 +13,7 @@ func (g *Gateway) GetEnvs(ctx context.Context, req *entity.GetEnvsRequest) (*ent
 			decryptedVariablesForService(projectId: $projectId, environmentId: $environmentId, serviceId: $serviceId)
 		}
 	`)
+
 	if err != nil {
 		return nil, err
 	}
@@ -27,9 +28,11 @@ func (g *Gateway) GetEnvs(ctx context.Context, req *entity.GetEnvsRequest) (*ent
 	var resp struct {
 		Envs *entity.Envs `json:"decryptedVariablesForService"`
 	}
+
 	if err := gqlReq.Run(ctx, &resp); err != nil {
 		return nil, err
 	}
+
 	return resp.Envs, nil
 }
 
@@ -46,15 +49,18 @@ func (g *Gateway) UpdateVariablesFromObject(ctx context.Context, req *entity.Upd
 				%s(projectId: $projectId, environmentId: $environmentId, pluginId: $pluginId, serviceId: $serviceId, variables: $variables)
 	  	}
 	`, queryName))
+
 	if err != nil {
 		return err
 	}
 
 	gqlReq.Var("projectId", req.ProjectID)
 	gqlReq.Var("environmentId", req.EnvironmentID)
+
 	if req.PluginID != "" {
 		gqlReq.Var("pluginId", req.PluginID)
 	}
+
 	if req.ServiceID != "" {
 		gqlReq.Var("serviceId", req.ServiceID)
 	}
@@ -74,6 +80,7 @@ func (g *Gateway) DeleteVariable(ctx context.Context, req *entity.DeleteVariable
 				deleteVariable(projectId: $projectId, environmentId: $environmentId, pluginId: $pluginId, serviceId: $serviceId, name: $name)
 	  	}
 	`)
+
 	if err != nil {
 		return err
 	}
@@ -81,9 +88,11 @@ func (g *Gateway) DeleteVariable(ctx context.Context, req *entity.DeleteVariable
 	gqlReq.Var("projectId", req.ProjectID)
 	gqlReq.Var("environmentId", req.EnvironmentID)
 	gqlReq.Var("name", req.Name)
+
 	if req.PluginID != "" {
 		gqlReq.Var("pluginId", req.PluginID)
 	}
+
 	if req.ServiceID != "" {
 		gqlReq.Var("serviceId", req.ServiceID)
 	}
