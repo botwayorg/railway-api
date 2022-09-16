@@ -175,7 +175,7 @@ func PrefixLines(text, prefix string) string {
 	return newText
 }
 
-func KeyValues(items map[string]string) string {
+func KeyValues(items map[string]string, hidden bool) string {
 	type pair struct {
 		Key   string
 		Value string
@@ -209,7 +209,13 @@ func KeyValues(items map[string]string) string {
 		prettyKey := fmt.Sprintf("%s:", GreenText(pair.Key))
 		padding := strings.Repeat(" ", max(0, nameLength-len(pair.Key)))
 
-		text += fmt.Sprintf("%s%s %s\n", prettyKey, padding, pair.Value)
+		value := pair.Value
+
+		if hidden {
+			value = "**********"
+		}
+
+		text += fmt.Sprintf("%s%s %s\n", prettyKey, padding, value)
 	}
 
 	return text

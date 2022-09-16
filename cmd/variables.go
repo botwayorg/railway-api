@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/botwayorg/railway-api/ui"
 	"github.com/botwayorg/railway-api/entity"
+	"github.com/botwayorg/railway-api/ui"
 )
 
 func (h *Handler) Variables(ctx context.Context, req *entity.CommandRequest) error {
@@ -30,7 +30,7 @@ func (h *Handler) Variables(ctx context.Context, req *entity.CommandRequest) err
 	}
 
 	fmt.Print(ui.Heading(fmt.Sprintf("%s Environment Variables", environment.Name)))
-	fmt.Print(ui.KeyValues(*envs))
+	fmt.Print(ui.KeyValues(*envs, false))
 
 	return nil
 }
@@ -126,7 +126,7 @@ func (h *Handler) VariablesSet(ctx context.Context, req *entity.CommandRequest) 
 	}
 
 	fmt.Print(ui.Heading(fmt.Sprintf("%s %s for \"%s\"", operation, strings.Join(updatedEnvNames, ", "), environment.Name)))
-	fmt.Print(ui.KeyValues(*variables))
+	fmt.Print(ui.KeyValues(*variables, false))
 
 	if !skipRedeploy {
 		serviceID, err := h.ctrl.GetServiceIdByName(ctx, &serviceName)
