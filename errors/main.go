@@ -8,8 +8,6 @@ import (
 
 type RailwayError error
 
-// TEST
-
 var (
 	RootConfigNotFound                  RailwayError = fmt.Errorf("Run %s to get started", ui.Bold("botway railway login"))
 	UserConfigNotFound                  RailwayError = fmt.Errorf("%s\nRun %s", ui.RedText("Not logged in."), ui.Bold("botway railway login"))

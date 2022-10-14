@@ -5,8 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	errors2 "github.com/railwayapp/cli/errors"
-	"github.com/railwayapp/cli/ui"
 	"io"
 	"net/http"
 	"os"
@@ -15,8 +13,10 @@ import (
 
 	"github.com/pkg/errors"
 
+    errors2 "github.com/botwayorg/railway-api/errors"
 	configs "github.com/botwayorg/railway-api/configs"
 	"github.com/botwayorg/railway-api/constants"
+    "github.com/botwayorg/railway-api/ui"
 )
 
 const (
