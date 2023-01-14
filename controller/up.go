@@ -99,7 +99,6 @@ func compress(src string, buf io.Writer) error {
 		if passedErr != nil {
 			return err
 		}
-
 		if de.IsDir() {
 			// skip directories if we can (for perf)
 			// e.g., want to avoid walking node_modules dir
@@ -115,7 +114,6 @@ func compress(src string, buf io.Writer) error {
 		for _, igf := range ignoreFiles {
 			if strings.HasPrefix(absoluteFile, igf.prefix) { // if ignore file applicable
 				trimmed := strings.TrimPrefix(absoluteFile, igf.prefix)
-
 				if igf.ignore.MatchesPath(trimmed) {
 					return nil
 				}
@@ -124,7 +122,6 @@ func compress(src string, buf io.Writer) error {
 
 		// follow symlinks by default
 		ln, err := filepath.EvalSymlinks(absoluteFile)
-
 		if err != nil {
 			return err
 		}
@@ -137,7 +134,6 @@ func compress(src string, buf io.Writer) error {
 		// read file into a buffer to prevent tar overwrites
 		data := bytes.NewBuffer(nil)
 		f, err := os.Open(ln)
-
 		if err != nil {
 			return err
 		}
@@ -154,7 +150,7 @@ func compress(src string, buf io.Writer) error {
 		}
 
 		// generate tar headers
-		header, err := tar.FileInfoHeader(fi, ln)
+		header, err := tar.FileInfoHeader(fileInfo, resolvedFilePath)
 		if err != nil {
 			return err
 		}
